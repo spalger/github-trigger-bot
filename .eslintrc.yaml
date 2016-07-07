@@ -1,0 +1,6 @@
+---
+
+extends: "@spalger/personal/react"
+
+rules:
+  import/named: error
