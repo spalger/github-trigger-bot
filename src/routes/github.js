@@ -1,3 +1,5 @@
+import { resolve as resolveUrl } from 'url'
+
 import Joi from 'joi'
 import bodyParser from 'body-parser'
 
@@ -9,11 +11,27 @@ github.use(bodyParser.json({
   limit: '1mb',
 }))
 
-github.post('/webhook',
+github.use('/webhook',
   validate('headers', Joi.object({
     'x-github-delivery': Joi.string(),
+    'x-github-event': Joi.string().valid('pull_request'),
   })),
 
+  (req, res, next) => {
+    req.ghEvent = {
+      id: req.headers['x-github-delivery'],
+      type: req.headers['x-github-event'],
+    }
+    next()
+  }
+)
+
+github.post('/webhook', (req, res, next) => {
+  req.path = resolveUrl(`${req.path}/`, req.ghEvent.type)
+  next()
+})
+
+github.post('/webhook/pull_request',
   validate('body', Joi.object({
     action: Joi.string().valid('opened'),
     pull_request: Joi.object({
