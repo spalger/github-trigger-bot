@@ -2,7 +2,7 @@ import Joi from 'joi'
 import Boom from 'boom'
 import { fromCallback as fcb } from 'bluebird'
 
-export const validate = (which, schema) => async cntx => {
+export const validate = (which, schema) => async (cntx, next) => {
   try {
     const input = cntx.request[which]
     const options = {
@@ -20,4 +20,6 @@ export const validate = (which, schema) => async cntx => {
   } catch (err) {
     throw Boom.wrap(err, 406) // not acceptable
   }
+
+  next()
 }

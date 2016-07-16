@@ -4,22 +4,39 @@ import Joi from 'joi'
 
 import { validate } from '../lib'
 
-const router = new Router()
+export const github = new Router()
 
-router.use(bodyParser({
+github.use(bodyParser({
   enableTypes: ['json'],
 }))
 
-router.post('/webhook',
+github.post('/webhook',
 
   validate('body', Joi.object({
-    action: Joi.string().valid('create'),
+    action: Joi.string().valid('opened'),
+    pull_request: Joi.object({
+      url: Joi.string().uri().description('api url'),
+      id: Joi.number().description('api/object id'),
+      number: Joi.number().description('repo-relative number'),
+      state: Joi.string().valid('open', 'closed'),
+      user: Joi.object({
+        login: Joi.string().description('username'),
+        url: Joi.string().uri().description('api url'),
+      }),
+      head: Joi.object().description('latest user commit').keys({
+        sha: Joi.string(),
+      }),
+      base: Joi.object().description('target branch').keys({
+        ref: Joi.string().description('branch name'),
+        sha: Joi.string(),
+      }),
+    }),
+    repository: Joi.object({
+      full_name: Joi.string().description('org/project formatted name'),
+    }),
   })),
 
   async ctx => {
     ctx.body = ctx.request.body
   }
 )
-
-
-export { router as github }
