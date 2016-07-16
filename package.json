@@ -1,19 +1,23 @@
 {
-  "name": "",
+  "name": "github-trigger",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "mocha": "mocha",
     "babel": "babel",
     "test": "npm run mocha -- -r src/test-support src/**/__tests__/**/*",
     "build": "rm -rf dist && npm run babel -- -D -d dist --ignore __tests__,src/test-support --source-maps inline src",
-    "build-watch": "npm run build -- --watch"
+    "build-watch": "npm run build -- --watch",
+    "start": "npm run build; node ."
   },
   "keywords": [],
   "author": "Spencer Alger <email@spalger.com>",
-  "license": "MIT",
-  "devDependencies": {
+  "license": "Apache 2.0",
+  "dependencies": {
+    "koa": "^2.0.0",
+    "koa-convert": "^1.2.0",
+    "koa-router": "^7.0.1",
     "@spalger/babel-presets": "^0.3.2",
     "@spalger/eslint-config-personal": "^0.4.0",
     "babel-cli": "^6.10.1",
