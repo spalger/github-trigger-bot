@@ -16,7 +16,13 @@ export const validate = (which, schema) => async (cntx, next) => {
         arrays: false,
       },
     }
-    cntx.request[which] = await fcb(cb => Joi.validate(input, schema, options, cb))
+
+    const valid = await fcb(cb => Joi.validate(input, schema, options, cb))
+    if (which !== 'headers') {
+      cntx.request[which] = valid
+    } else {
+      Object.assign(cntx.request.headers, valid)
+    }
   } catch (err) {
     throw Boom.wrap(err, 406) // not acceptable
   }

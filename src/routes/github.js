@@ -11,6 +11,9 @@ github.use(bodyParser({
 }))
 
 github.post('/webhook',
+  validate('headers', Joi.object({
+    'x-github-delivery': Joi.string(),
+  })),
 
   validate('body', Joi.object({
     action: Joi.string().valid('opened'),
@@ -36,7 +39,15 @@ github.post('/webhook',
     }),
   })),
 
-  async ctx => {
-    ctx.body = ctx.request.body
+  async cntx => {
+    const resp = await cntx.app.es.index({
+      index: 'hooks',
+      type: 'hook',
+      id: cntx.headers['x-github-delivery'],
+      body: cntx.request.body,
+    })
+
+    cntx.response.body = 'ok'
+    cntx.response.body = { sent: resp }
   }
 )
