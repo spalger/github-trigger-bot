@@ -58,9 +58,8 @@ github.post('/webhook/pull_request',
 
   async (req, res) => {
     res.json(await req.app.es.index({
-      index: 'hooks',
-      type: 'hook',
-      id: req.headers['x-github-delivery'],
+      index: `gh-events-${req.ghEvent.type}`,
+      id: req.ghEvent.id,
       body: req.body,
     }))
   }
