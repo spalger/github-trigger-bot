@@ -1,13 +1,12 @@
-import Router from 'koa-router'
-import bodyParser from 'koa-bodyparser'
 import Joi from 'joi'
+import bodyParser from 'body-parser'
 
-import { validate } from '../lib'
+import { validate, Router } from '../lib'
 
 export const github = new Router()
 
-github.use(bodyParser({
-  enableTypes: ['json'],
+github.use(bodyParser.json({
+  limit: '1mb',
 }))
 
 github.post('/webhook',
@@ -39,15 +38,12 @@ github.post('/webhook',
     }),
   })),
 
-  async cntx => {
-    const resp = await cntx.app.es.index({
+  async (req, res) => {
+    res.json(await req.app.es.index({
       index: 'hooks',
       type: 'hook',
-      id: cntx.headers['x-github-delivery'],
-      body: cntx.request.body,
-    })
-
-    cntx.response.body = 'ok'
-    cntx.response.body = { sent: resp }
+      id: req.headers['x-github-delivery'],
+      body: req.body,
+    }))
   }
 )

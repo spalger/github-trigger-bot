@@ -2,23 +2,21 @@ import { createServer } from 'http'
 import { resolve } from 'path'
 
 import dotenv from 'dotenv'
-import Koa from 'koa'
+import express from 'express'
 import SocketIO from 'socket.io'
-import views from 'koa-views'
 
 import router from './routes'
-import { Es, errorHandler } from './lib'
+import { getEs, errorHandler } from './lib'
 
 dotenv.config()
-const app = new Koa
-const server = createServer(app.callback())
+const app = express()
+const server = createServer(app)
 app.io = new SocketIO(server)
-app.es = new Es
+app.es = getEs()
 
+app.set('views', resolve(__dirname, 'views'))
+app.set('view engine', 'pug')
+app.use(router)
 app.use(errorHandler())
-app.use(views(resolve(__dirname, 'views'), {
-  extension: 'pug',
-}))
-app.use(router.routes())
 
 server.listen(process.env.PORT || 3000)

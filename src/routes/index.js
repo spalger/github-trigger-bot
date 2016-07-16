@@ -1,19 +1,18 @@
-import Router from 'koa-router'
-
+import { Router } from 'express'
 import { github } from './github'
 import { assets } from './assets'
 
-const router = new Router()
+const router = new Router
 
-router.get('/', async cntx => {
-  await cntx.render('index')
+router.get('/', (req, res) => {
+  res.render('index')
 })
 
-router.get('/ping', cntx => {
-  cntx.body = 'pong'
+router.get('/ping', (req, res) => {
+  res.send('pong')
 })
 
-router.use('/github', github.routes())
-router.use('/assets', assets.routes())
+router.use('/github', github)
+router.use('/assets', assets)
 
 export default router
