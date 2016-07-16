@@ -1,16 +1,8 @@
 import Koa from 'koa'
-import Router from 'koa-router'
+
+import router from './routes'
 
 const app = new Koa()
-const router = new Router()
-
-router.get('/ping', cntx => {
-  cntx.body = 'pong'
-})
-
-router.post('/github/webhook', async ctx => {
-  console.log(ctx.request.body)
-})
 
 // uses async arrow functions
 app.use(async (ctx, next) => {
