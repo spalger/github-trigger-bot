@@ -1,9 +1,7 @@
-import { resolve as resolveUrl } from 'url'
-
 import Joi from 'joi'
 import bodyParser from 'body-parser'
 
-import { validate, Router } from '../lib'
+import { validate, Router, modifyUrl, joinPathname } from '../lib'
 
 export const github = new Router()
 
@@ -27,7 +25,10 @@ github.use('/webhook',
 )
 
 github.post('/webhook', (req, res, next) => {
-  req.path = resolveUrl(`${req.path}/`, req.ghEvent.type)
+  req.url = modifyUrl(req.url, url => ({
+    ...url,
+    pathname: joinPathname(url.pathname, req.ghEvent.type),
+  }))
   next()
 })
 
@@ -59,8 +60,12 @@ github.post('/webhook/pull_request',
   async (req, res) => {
     res.json(await req.app.es.index({
       index: `gh-events-${req.ghEvent.type}`,
+      type: req.ghEvent.type,
       id: req.ghEvent.id,
-      body: req.body,
+      body: {
+        received_at: (new Date()).toJSON(),
+        ...req.body,
+      },
     }))
   }
 )

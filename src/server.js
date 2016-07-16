@@ -1,6 +1,7 @@
 import { createServer } from 'http'
 import { resolve } from 'path'
 
+import 'babel-polyfill'
 import dotenv from 'dotenv'
 import express from 'express'
 import SocketIO from 'socket.io'
