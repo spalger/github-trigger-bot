@@ -8,15 +8,19 @@ export const validateEventData = schema => {
     await fcb(cb => validateMiddleware(req, res, cb))
 
     const { ghEvent } = req
-    const { es } = req.app
+    const { es, events } = req.app
 
     ghEvent.setData(req.body)
     const { index, type, id } = ghEvent.getEsLocation()
+
     await es.index({
-      index, type, id,
+      index,
+      type,
+      id,
       body: ghEvent.getEsDocument(),
     })
 
+    events.onEventCreated(ghEvent)
     next()
   }
 }

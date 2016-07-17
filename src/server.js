@@ -8,12 +8,14 @@ import SocketIO from 'socket.io'
 
 import { router } from './router'
 import { getEs, errorHandler } from './utils'
+import { GithubEvents } from './github-events'
 
 dotenv.config()
 const app = express()
 const server = createServer(app)
 app.io = new SocketIO(server)
 app.es = getEs()
+app.events = new GithubEvents(app.es, app.io)
 
 app.set('views', resolve(__dirname, 'views'))
 app.set('view engine', 'pug')

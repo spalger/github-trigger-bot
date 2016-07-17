@@ -27,4 +27,8 @@ export class GithubEvent {
     const { index, type, id, receivedAt, data = {} } = props(this)
     return { index, type, id, receivedAt, ...data }
   }
+
+  toJSON() {
+    return this.getEsDocument()
+  }
 }

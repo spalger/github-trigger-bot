@@ -1,9 +1,9 @@
 extend layout
 
 block scripts
-  script(src="/assets/event-stream.js")
+  script(src="/assets/github-events.js")
 
 block content
   h1 github trigger
   h2 events
-  event-stream(ng-app="EventStream")
+  github-events(ng-app="GithubEvents")

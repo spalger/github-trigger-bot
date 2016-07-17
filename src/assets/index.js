@@ -21,7 +21,7 @@ browserify.settings({
   transform: ['babelify'],
 })
 
-router.get('/event-stream.js', browserify(resolve(__dirname, 'bundles/event-stream/app.js')))
+router.get('/github-events.js', browserify(resolve(__dirname, '../github-events/bundle/index.js')))
 
 router.use(async (req, res, next) => {
   const path = paths[req.url]
