@@ -1,11 +1,13 @@
 import Joi from 'joi'
 
-import { Router, validate } from '../utils'
+import { Router } from '../utils'
+
+import { validateEventData } from '../github-event'
 
 const router = new Router()
 
 router.post('/issue_comment',
-  validate('body', Joi.object({
+  validateEventData(Joi.object({
     action: Joi.string().valid('created'),
     issue: Joi.object({
       url: Joi.string().uri().description('api url'),
@@ -42,15 +44,7 @@ router.post('/issue_comment',
   })),
 
   async (req, res) => {
-    res.json(await req.app.es.index({
-      index: `gh-events-${req.ghEvent.type}`,
-      type: req.ghEvent.type,
-      id: req.ghEvent.id,
-      body: {
-        ...req.ghEvent,
-        ...req.body,
-      },
-    }))
+    res.json({ ok: true })
   }
 )
 

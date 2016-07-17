@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { ghWebhook } from '../gh-webhook'
-import { assets } from './assets'
+import githubWebhook from '../github-webhook'
+import assets from './assets'
 
 export const router = new Router
 
@@ -12,5 +12,5 @@ router.get('/ping', (req, res) => {
   res.send('pong')
 })
 
-router.use('/gh-webhook', ghWebhook)
+router.use('/github-webhook', githubWebhook)
 router.use('/assets', assets)

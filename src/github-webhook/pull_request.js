@@ -1,11 +1,12 @@
 import Joi from 'joi'
 
-import { Router, validate } from '../utils'
+import { Router } from '../utils'
+import { validateEventData } from '../github-event'
 
 const router = new Router()
 
 router.post('/pull_request',
-  validate('body', Joi.object().keys({
+  validateEventData(Joi.object().keys({
     action: Joi.string().valid('opened'),
     pull_request: Joi.object({
       url: Joi.string().uri().description('api url'),
@@ -30,15 +31,7 @@ router.post('/pull_request',
   })),
 
   async (req, res) => {
-    res.json(await req.app.es.index({
-      index: `gh-events-${req.ghEvent.type}`,
-      type: req.ghEvent.type,
-      id: req.ghEvent.id,
-      body: {
-        ...req.ghEvent,
-        ...req.body,
-      },
-    }))
+    res.json({ ok: true })
   }
 )
 
