@@ -5,12 +5,9 @@ export class GithubEvent {
     props(this, {
       id,
       type,
-      index: `gh-events-${type}`,
       receivedAt: new Date(),
       data: undefined,
     })
-
-    console.log('created event with props %j', props(this))
   }
 
   getType() {
@@ -18,8 +15,8 @@ export class GithubEvent {
   }
 
   getEsLocation() {
-    const { index, type, id } = props(this)
-    return { index, type, id }
+    const { type, id } = props(this)
+    return { id, type, index: `gh-events-${type}` }
   }
 
   setData(data) {
