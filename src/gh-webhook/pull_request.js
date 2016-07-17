@@ -1,39 +1,10 @@
 import Joi from 'joi'
-import bodyParser from 'body-parser'
 
-import { validate, Router, modifyUrl, joinPathname } from '../lib'
+import { Router, validate } from '../lib'
 
-export const github = new Router()
+const router = new Router()
 
-github.use(bodyParser.json({
-  limit: '1mb',
-}))
-
-github.use('/webhook',
-  validate('headers', Joi.object({
-    'x-github-delivery': Joi.string(),
-    'x-github-event': Joi.string().valid('pull_request'),
-  })),
-
-  (req, res, next) => {
-    req.ghEvent = {
-      receivedAt: (new Date()).toJSON(),
-      id: req.headers['x-github-delivery'],
-      type: req.headers['x-github-event'],
-    }
-    next()
-  }
-)
-
-github.post('/webhook', (req, res, next) => {
-  req.url = modifyUrl(req.url, url => ({
-    ...url,
-    pathname: joinPathname(url.pathname, req.ghEvent.type),
-  }))
-  next()
-})
-
-github.post('/webhook/pull_request',
+router.post('/pull_request',
   validate('body', Joi
     .object()
     .rename('pull_request', 'pullRequest')
@@ -77,3 +48,5 @@ github.post('/webhook/pull_request',
     }))
   }
 )
+
+export default router

@@ -1,18 +1,14 @@
 import { resolve } from 'path'
 
+import ms from 'ms'
+
 import { Router } from '../lib'
 
 export const assets = new Router()
-
-const SECOND = 1000
-const MINUTE = 60 * SECOND
-const HOUR = 60 * MINUTE
-const DAY = 24 * HOUR
 const SEND_OPTS = {
-  maxAge: 30 * DAY,
+  maxAge: ms('30 days'),
   root: resolve(__dirname, '../../'),
 }
-
 const paths = {
   '/blaze.css': 'node_modules/blaze/dist/blaze.min.css',
 }
