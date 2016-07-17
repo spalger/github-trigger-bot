@@ -7,7 +7,7 @@ import express from 'express'
 import SocketIO from 'socket.io'
 
 import { router } from './router'
-import { getEs, errorHandler } from './lib'
+import { getEs, errorHandler } from './utils'
 
 dotenv.config()
 const app = express()

@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { Router, validate } from '../lib'
+import { Router, validate } from '../utils'
 
 const router = new Router()
 

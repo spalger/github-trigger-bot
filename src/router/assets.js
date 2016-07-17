@@ -2,7 +2,7 @@ import { resolve } from 'path'
 
 import ms from 'ms'
 
-import { Router } from '../lib'
+import { Router } from '../utils'
 
 export const assets = new Router()
 const SEND_OPTS = {

@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import bodyParser from 'body-parser'
 
-import { validate, Router, modifyUrl, joinPathname } from '../lib'
+import { validate, Router, modifyUrl, joinPathname } from '../utils'
 import prs from './pull_request'
 
 export const ghWebhook = new Router()
