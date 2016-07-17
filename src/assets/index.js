@@ -1,5 +1,6 @@
 import { resolve } from 'path'
 
+import browserify from 'browserify-middleware'
 import ms from 'ms'
 
 import { Router } from '../utils'
@@ -14,6 +15,13 @@ const SEND_OPTS = {
 const paths = {
   '/blaze.css': 'node_modules/blaze/dist/blaze.min.css',
 }
+
+browserify.settings.production('cache', '7 days')
+browserify.settings({
+  transform: ['babelify'],
+})
+
+router.get('/event-stream.js', browserify(resolve(__dirname, 'bundles/event-stream/app.js')))
 
 router.use(async (req, res, next) => {
   const path = paths[req.url]
