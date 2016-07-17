@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 
 import { validate, Router, modifyUrl, joinPathname } from '../utils'
 import prs from './pull_request'
+import issues from './issue_comment'
 
 export const ghWebhook = new Router()
 
@@ -13,7 +14,7 @@ ghWebhook.use(bodyParser.json({
 ghWebhook.use(
   validate('headers', Joi.object({
     'x-github-delivery': Joi.string(),
-    'x-github-event': Joi.string().valid('pull_request'),
+    'x-github-event': Joi.string().valid('pull_request', 'issue_comment'),
   })),
 
   (req, res, next) => {
@@ -34,4 +35,5 @@ ghWebhook.post('/', (req, res, next) => {
   next()
 })
 
+ghWebhook.use(issues)
 ghWebhook.use(prs)
