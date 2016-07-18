@@ -18,7 +18,7 @@ router.use(
     'x-github-delivery': Joi.string(),
     'x-github-event': Joi.string().valid('pull_request', 'issue_comment'),
   })),
-  initializeGithubEvent(),
+  initializeGithubEvent()
 )
 
 router.post('/', (req, res, next) => {
