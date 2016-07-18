@@ -48,8 +48,13 @@ router.post('/issue_comment',
   })),
 
   async (req, res) => {
-    const { ghApi } = req.app
+    const { ghApi, ghBot } = req.app
     const d = req.body
+
+    if (d.comment.user.login === ghBot.getUsername()) {
+      res.json({ ignored: true, beceause: 'comment by bot' })
+      return
+    }
 
     const repo = Repo.fromEventData(d.repository)
     const issue = Issue.fromEventData(d.issue)

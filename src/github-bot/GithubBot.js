@@ -34,7 +34,7 @@ export class GithubBot {
     return getProps(this).user
   }
 
-  getLogin() {
+  getUsername() {
     return getProps(this).user.login
   }
 }
