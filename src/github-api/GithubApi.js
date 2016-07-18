@@ -3,7 +3,8 @@ import axios from 'axios'
 import { createCommitStatusUrl, createIssueCommentUrl } from './urls'
 
 export class GithubApi {
-  constructor() {
+  constructor(log) {
+    this.log = log
     this.api = axios.create({
       baseURL: 'https://api.github.com',
       timeout: 30000,
@@ -16,6 +17,7 @@ export class GithubApi {
   }
 
   async setCommitStatus(repo, commit, status) {
+    this.log.debug('setting commit status for %s %s to %s', repo, commit, status)
     return await this.api.request({
       method: 'POST',
       url: createCommitStatusUrl.expand({
@@ -29,6 +31,7 @@ export class GithubApi {
   }
 
   async commentOnIssue(repo, issue, commentText) {
+    this.log.debug('commenting on issue %s in repo %s', issue, repo)
     return await this.api.request({
       method: 'POST',
       url: createIssueCommentUrl.expand({
@@ -44,6 +47,7 @@ export class GithubApi {
   }
 
   async getPrForIssue(issue) {
+    this.log.debug('getting pr for issue, %s', issue)
     return await this.api.request({
       method: 'GET',
       url: issue.getPullRequest().url,

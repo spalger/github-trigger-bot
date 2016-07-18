@@ -14,6 +14,10 @@ export class Issue extends createSafeBase(schema) {
     return new Issue(data)
   }
 
+  toString() {
+    return `#${getProps(this).number}`
+  }
+
   hasPullRequest() {
     return !!getProps(this).pull_request
   }

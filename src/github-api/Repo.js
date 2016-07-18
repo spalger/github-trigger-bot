@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { createSafeBase } from '../utils'
+import { createSafeBase, getProps } from '../utils'
 
 const schema = Joi.object().keys({
   owner: Joi.string(),
@@ -13,5 +13,10 @@ export class Repo extends createSafeBase(schema) {
       owner: data.owner.login,
       name: data.name,
     })
+  }
+
+  toString() {
+    const { owner, name } = getProps(this)
+    return `${owner}/${name}`
   }
 }

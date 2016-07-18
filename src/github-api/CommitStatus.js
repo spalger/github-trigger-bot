@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-import { createSafeBase } from '../utils'
+import { createSafeBase, getProps } from '../utils'
 
 const schema = Joi.object().keys({
   state: Joi.string().valid('pending', 'success', 'error', 'failure'),
@@ -9,4 +9,9 @@ const schema = Joi.object().keys({
   context: Joi.string().default('default'),
 })
 
-export class CommitStatus extends createSafeBase(schema) {}
+export class CommitStatus extends createSafeBase(schema) {
+  toString() {
+    const { state, description } = getProps(this)
+    return `${state}: ${description}`
+  }
+}
