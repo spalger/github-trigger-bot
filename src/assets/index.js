@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 
-import browserify from 'browserify-middleware'
+import express from 'express'
 import ms from 'ms'
 
 import { Router } from '../utils'
@@ -16,13 +16,7 @@ const paths = {
   '/blaze.css': 'node_modules/blaze/dist/blaze.min.css',
 }
 
-browserify.settings.production('cache', '7 days')
-browserify.settings({
-  transform: ['babelify'],
-})
-
-router.get('/github-events.js', browserify(resolve(__dirname, '../github-events/bundle/index.js')))
-
+router.use('/bundles', express.static(resolve(__dirname, '../bundles'), SEND_OPTS))
 router.use(async (req, res, next) => {
   const path = paths[req.url]
   if (path) {

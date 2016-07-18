@@ -1,26 +1,24 @@
-import { fromCallback as fcb } from 'bluebird'
-
 import { validate } from '../utils'
 
-export const validateEventData = schema => {
-  const validateMiddleware = validate('body', schema)
-  return async (req, res, next) => {
-    await fcb(cb => validateMiddleware(req, res, cb))
+export const validateEventData = schema => async (req, res, next) => {
+  const { es, events, log } = req.app
+  const { ghEvent } = req
 
-    const { ghEvent } = req
-    const { es, events } = req.app
+  log.debug('setting validated event data to ghEvent object')
+  ghEvent.setData(await validate(req, 'body', schema))
+  const { index, type, id } = ghEvent.getEsLocation()
 
-    ghEvent.setData(req.body)
-    const { index, type, id } = ghEvent.getEsLocation()
+  log.debug('saving ghEvent to elasticsearch')
+  await es.index({
+    index,
+    type,
+    id,
+    body: ghEvent.getEsDocument(),
+  })
 
-    await es.index({
-      index,
-      type,
-      id,
-      body: ghEvent.getEsDocument(),
-    })
+  log.debug('notifying event channel about event creation')
+  events.onEventCreated(ghEvent)
 
-    events.onEventCreated(ghEvent)
-    next()
-  }
+  log.debug('handing control back to route')
+  next()
 }
