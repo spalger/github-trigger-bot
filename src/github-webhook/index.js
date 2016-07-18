@@ -8,12 +8,22 @@ import issues from './issue_comment'
 
 const router = new Router()
 
-router.use(bodyParser.json({
+// buffer the body as long as it is less than 1mb
+router.use(bodyParser.raw({
   limit: '1mb',
 }))
 
+// json parse the body
+router.use((req, res, next) => {
+  req.rawBody = req.body
+  req.body = JSON.parse(req.rawBody.toString('utf8'))
+  next()
+})
+
+// create the req.ghEvent object
 router.use(initializeGithubEvent())
 
+// internal "redirect" to appropariate route based on event type
 router.post('/', (req, res, next) => {
   req.url = modifyUrl(req.url, url => ({
     ...url,
@@ -22,6 +32,7 @@ router.post('/', (req, res, next) => {
   next()
 })
 
+// event type route handlers
 router.use(issues)
 router.use(prs)
 
