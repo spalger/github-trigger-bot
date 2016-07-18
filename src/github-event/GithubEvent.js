@@ -1,8 +1,8 @@
-import { props } from '../utils'
+import { getProps, setProps } from '../utils'
 
 export class GithubEvent {
   constructor({ id, type } = {}) {
-    props(this, {
+    setProps(this, {
       id,
       type,
       receivedAt: new Date(),
@@ -11,20 +11,20 @@ export class GithubEvent {
   }
 
   getType() {
-    return props(this).type
+    return getProps(this).type
   }
 
   getEsLocation() {
-    const { type, id } = props(this)
+    const { type, id } = getProps(this)
     return { id, type, index: `gh-events-${type}` }
   }
 
   setData(data) {
-    props(this, { data })
+    setProps(this, { data })
   }
 
   getEsDocument() {
-    const { index, type, id, receivedAt, data = {} } = props(this)
+    const { index, type, id, receivedAt, data = {} } = getProps(this)
     return { index, type, id, receivedAt, ...data }
   }
 

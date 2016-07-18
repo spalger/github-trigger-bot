@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
 import { Router } from '../utils'
-
+import { Repo, Issue, Commit, CommitStatus } from '../github-api'
 import { validateEventData } from '../github-event'
 
 const router = new Router()
@@ -39,11 +39,39 @@ router.post('/issue_comment',
       body: Joi.string(),
     }),
     repository: Joi.object({
-      full_name: Joi.string().description('org/project formatted name'),
+      name: Joi.string(),
+      full_name: Joi.string().description('owner/name formatted name'),
+      owner: Joi.object().keys({
+        login: Joi.string(),
+      }),
     }),
   })),
 
   async (req, res) => {
+    const { ghApi } = req.app
+    const d = req.body
+
+    const repo = Repo.fromEventData(d.repository)
+    const issue = Issue.fromEventData(d.issue)
+
+    if (issue.hasPullRequest()) {
+      const { data: pr } = await ghApi.getPrForIssue(issue)
+
+      ghApi.setCommitStatus(
+        repo,
+        new Commit({
+          sha: pr.head.sha,
+        }),
+        new CommitStatus({
+          state: 'pending',
+          target_url: 'https://github.com',
+          description: 'Received issue comment webhook',
+        })
+      )
+    } else {
+      ghApi.commentOnIssue(repo, issue, 'Does not look like this is a pull request')
+    }
+
     res.json({ ok: true })
   }
 )

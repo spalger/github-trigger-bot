@@ -5,3 +5,4 @@ extends: "@spalger/personal/react"
 rules:
   import/named: error
   no-param-reassign: off
+  no-underscore-dangle: off

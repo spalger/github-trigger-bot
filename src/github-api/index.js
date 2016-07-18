@@ -1,0 +1,5 @@
+export { GithubApi } from './GithubApi'
+export { Repo } from './Repo'
+export { Issue } from './Issue'
+export { Commit } from './Commit'
+export { CommitStatus } from './CommitStatus'

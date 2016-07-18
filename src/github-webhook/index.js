@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import bodyParser from 'body-parser'
 
-import { validateMw, Router, modifyUrl, joinPathname } from '../utils'
+import { validateReqMw, Router, modifyUrl, joinPathname } from '../utils'
 import { initialize as initializeGithubEvent } from '../github-event'
 
 import prs from './pull_request'
@@ -14,7 +14,7 @@ router.use(bodyParser.json({
 }))
 
 router.use(
-  validateMw('headers', Joi.object({
+  validateReqMw('headers', Joi.object({
     'x-github-delivery': Joi.string(),
     'x-github-event': Joi.string().valid('pull_request', 'issue_comment'),
   })),

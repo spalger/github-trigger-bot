@@ -20,6 +20,7 @@
     "@spalger/babel-presets": "^0.3.2",
     "@spalger/eslint-config-personal": "^0.4.0",
     "angular": "^1.5.7",
+    "axios": "^0.13.1",
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.1.0",
     "babel-register": "^6.9.0",
@@ -46,6 +47,8 @@
     "socket.io": "^1.4.8",
     "socket.io-client": "^1.4.8",
     "source-map-support": "^0.4.1",
+    "typescript": "^1.8.10",
+    "url-template": "^2.0.8",
     "webpack": "^1.13.1"
   }
 }

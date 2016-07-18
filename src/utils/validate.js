@@ -1,23 +1,31 @@
 import Joi from 'joi'
 import Boom from 'boom'
-import { fromCallback as fcb } from 'bluebird'
 
-export const validate = async (req, which, schema) => {
+export const joiOpts = {
+  abortEarly: false,
+  convert: true,
+  allowUnknown: true,
+  presence: 'required',
+  stripUnknown: {
+    objects: true,
+    arrays: false,
+  },
+}
+
+export const validate = (val, schema) => {
+  const resp = Joi.validate(val, schema, joiOpts)
+
+  if (resp.error) {
+    throw resp.error
+  } else {
+    return resp.value
+  }
+}
+
+export const validateReq = (req, which, schema) => {
   try {
     const input = req[which]
-    const options = {
-      abortEarly: false,
-      convert: true,
-      allowUnknown: true,
-      presence: 'required',
-      stripUnknown: {
-        objects: true,
-        arrays: false,
-      },
-    }
-
-    const valid = await fcb(cb => Joi.validate(input, schema, options, cb))
-
+    const valid = validate(input, schema)
     if (which === 'headers') {
       Object.assign(req.headers, valid)
     } else {
@@ -30,7 +38,7 @@ export const validate = async (req, which, schema) => {
   }
 }
 
-export const validateMw = (which, schema) => async (req, res, next) => {
-  await validate(req, which, schema)
+export const validateReqMw = (which, schema) => (req, res, next) => {
+  validateReq(req, which, schema)
   next()
 }
