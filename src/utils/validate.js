@@ -37,8 +37,3 @@ export const validateReq = (req, which, schema) => {
     throw Boom.wrap(err, 406) // not acceptable
   }
 }
-
-export const validateReqMw = (which, schema) => (req, res, next) => {
-  validateReq(req, which, schema)
-  next()
-}

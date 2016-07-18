@@ -5,7 +5,7 @@ export const validateEventData = schema => async (req, res, next) => {
   const { ghEvent } = req
 
   log.debug('setting validated event data to ghEvent object')
-  ghEvent.setData(await validateReq(req, 'body', schema))
+  ghEvent.setData(validateReq(req, 'body', schema))
   const { index, type, id } = ghEvent.getEsLocation()
 
   log.debug('saving ghEvent to elasticsearch')

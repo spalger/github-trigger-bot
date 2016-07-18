@@ -1,4 +1,4 @@
-export { validate, validateReq, validateReqMw } from './validate'
+export { validate, validateReq } from './validate'
 export { errorHandler } from './errorHandler'
 export { getEs } from './Es'
 export { Router } from './Router'
