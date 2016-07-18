@@ -1,8 +1,17 @@
-import urlTemplate from 'url-template'
+const parse = pattern => {
+  const parts = pattern.split(/[\{\}]/)
+  return (vals) => parts.reduce((acc, seg, i) => {
+    if (i % 2) {
+      const val = vals[seg]
+      if (val == null) {
+        throw new Error(`Missing template variable "${seg}"`)
+      }
+      // every odd part is a key name
+      return acc + val
+    }
 
-const parse = str => {
-  const parsed = urlTemplate.parse(str)
-  return (vals) => parsed.expand(vals)
+    return acc + seg
+  })
 }
 
 export const createCommitStatusUrl =

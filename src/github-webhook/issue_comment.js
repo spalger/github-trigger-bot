@@ -57,7 +57,7 @@ router.post('/issue_comment',
     if (issue.hasPullRequest()) {
       const { data: pr } = await ghApi.getPrForIssue(issue)
 
-      ghApi.setCommitStatus(
+      await ghApi.setCommitStatus(
         repo,
         new Commit({
           sha: pr.head.sha,
@@ -69,7 +69,7 @@ router.post('/issue_comment',
         })
       )
     } else {
-      ghApi.commentOnIssue(repo, issue, 'Does not look like this is a pull request')
+      await ghApi.commentOnIssue(repo, issue, 'Does not look like this is a pull request')
     }
 
     res.json({ ok: true })

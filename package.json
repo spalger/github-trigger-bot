@@ -2,7 +2,7 @@
   "name": "github-trigger",
   "version": "0.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/bootstrap.js",
   "scripts": {
     "mocha": "mocha",
     "webpack": "webpack",
@@ -48,7 +48,6 @@
     "socket.io-client": "^1.4.8",
     "source-map-support": "^0.4.1",
     "typescript": "^1.8.10",
-    "url-template": "^2.0.8",
     "webpack": "^1.13.1"
   }
 }

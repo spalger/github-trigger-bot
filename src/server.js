@@ -1,8 +1,6 @@
 import { createServer } from 'http'
 import { resolve } from 'path'
 
-import 'babel-polyfill'
-import 'source-map-support/register'
 import dotenv from 'dotenv'
 import express from 'express'
 import bunyan from 'bunyan'
