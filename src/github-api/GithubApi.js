@@ -1,6 +1,11 @@
 import axios from 'axios'
 // import axiosHttpAdapter from 'axios/lib/adapters/http'
 
+const { GITHUB_ACCESS_TOKEN } = process.env
+if (!GITHUB_ACCESS_TOKEN) {
+  throw new TypeError('You must specify the GITHUB_ACCESS_TOKEN config or environment var')
+}
+
 import {
   getMeUrl,
   getUserUrl,
@@ -18,7 +23,7 @@ export class GithubApi {
       headers: {
         'User-Agent': 'github-trigger-bot',
         Accept: 'application/vnd.github.v3+json',
-        Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
+        Authorization: `token ${GITHUB_ACCESS_TOKEN}`,
       },
     })
 
