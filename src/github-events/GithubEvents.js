@@ -1,24 +1,29 @@
+
+import { getProps, setProps } from '../utils'
+
 export class GithubEvents {
   constructor(es, io) {
-    this.es = es
-    this.io = io
+    const latest = []
+    const room = io.of('/github-events')
+    setProps(this, { es, io, latest, room })
+  }
 
-    this.latest = []
-    this.room = this.io.of('/github-events')
+  setupRoomConnectionListener() {
+    const { room } = getProps(this)
 
-    this.room.on('connection', socket => {
-      // send the last 10 events to new viewers on connection
-      for (let i = this.latest.length; i >= 0; i--) {
-        const event = this.latest[i]
-        if (event) socket.emit('created', event)
-      }
+    room.on('connection', socket => {
+      getProps(this).latest.forEach(event => {
+        socket.emit('created', event)
+      })
     })
   }
 
   onEventCreated(event) {
-    this.latest.unshift(event)
-    if (this.latest.length > 10) this.latest.length = 10
+    const { latest, room } = getProps(this)
 
-    this.room.emit('created', event.toJSON())
+    latest.push(event)
+    if (latest.length > 10) latest.shift()
+
+    room.emit('created', event.toJSON())
   }
 }
